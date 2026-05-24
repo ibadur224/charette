@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>our work · CHARRETTE DESIGN</title>
+  <!-- Google Fonts: Audiowide + Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      position: relative;
+      min-height: 100vh;
+      color: #ffffff;
+    }
+
+    /* ----- SNOW.MP4 FULLSCREEN BACKGROUND ----- */
+    .bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ----- BACK TO HOME BUTTON (HOME_B.PNG) ----- */
+    .home-btn {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      z-index: 100;
+      width: 70px;
+      height: 70px;
+      background: url('home_b.png') no-repeat center/contain;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3));
+    }
+
+    .home-btn:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 12px 28px rgba(0,0,0,0.4));
+    }
+
+    /* ----- MAIN WRAPPER ----- */
+    .main {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 7rem 2rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ----- HERO / TITLE SECTION ----- */
+    .hero-title {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .hero-title h1 {
+      font-family: 'Audiowide', cursive;
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: white;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      line-height: 1.1;
+    }
+
+    .hero-title p {
+      font-size: 1rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      margin-top: 0.8rem;
+      font-weight: 300;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    /* ----- GALLERY GRID - SMALLER TILES (DYNAMIC GRID) ----- */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+      margin: 2rem 0 3rem;
+    }
+
+    .gallery-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 3 / 4;
+      background: rgba(15, 15, 15, 0.25);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 15px 30px -8px rgba(0,0,0,0.3);
+      transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+      cursor: pointer;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 20px 40px -8px rgba(0,0,0,0.5);
+      background: rgba(25, 25, 25, 0.35);
+    }
+
+    .gallery-card img,
+    .gallery-card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-card:hover img,
+    .gallery-card:hover video {
+      transform: scale(1.08);
+    }
+
+    .card-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.2rem 0.8rem 0.8rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.3s ease;
+    }
+
+    .gallery-card:hover .card-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ----- VIDEO ROW - SMALLER TILES (DYNAMIC FROM SAME FOLDER) ----- */
+    .video-row-title {
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin: 3rem 0 1.5rem;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding-bottom: 0.6rem;
+    }
+
+    .slider-container {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      border-radius: 24px;
+    }
+
+    .video-slider {
+      display: flex;
+      gap: 1.2rem;
+      width: fit-content;
+    }
+
+    .video-slider.animate {
+      animation: scrollVideos 35s linear infinite;
+    }
+
+    .video-slider:hover {
+      animation-play-state: paused;
+    }
+
+    .video-slide {
+      flex: 0 0 220px;
+      height: 300px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(15, 15, 15, 0.25);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 15px 30px -5px rgba(0,0,0,0.4);
+      transition: all 0.4s ease;
+    }
+
+    .video-slide:hover {
+      transform: scale(1.02) translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(25, 25, 25, 0.35);
+    }
+
+    .video-slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @keyframes scrollVideos {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-220px * var(--video-count, 8) - 1.2rem * var(--video-count, 8))); }
+    }
+
+    /* ----- FULLSCREEN IMAGE MODAL ----- */
+    .fullscreen-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0.2s, opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    .fullscreen-modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .fullscreen-image {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      box-shadow: 0 0 40px rgba(0,0,0,0.5);
+      border-radius: 8px;
+      cursor: default;
+    }
+
+    .close-fullscreen {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 56px;
+      background: rgba(30, 30, 30, 0.85);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2001;
+      font-size: 2rem;
+      color: white;
+      font-weight: 300;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .close-fullscreen:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: translateX(-50%) scale(1.1);
+    }
+
+    /* ----- CREATIVE CONTACT TRIGGER - FLOATING INFO BAR ----- */
+    .contact-bar {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0 3rem;
+    }
+
+    .contact-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0.8rem 2rem;
+      background: rgba(10, 10, 10, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 60px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .contact-chip:hover {
+      background: rgba(20, 20, 20, 0.5);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+    }
+
+    .chip-text {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    .chip-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .contact-chip:hover .chip-icon {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(10deg);
+    }
+
+    .chip-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: white;
+      stroke-width: 2;
+    }
+
+    .chip-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ----- CONTACT OVERLAY (ELEGANT DARK) ----- */
+    .contact-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: #0a0a0a;
+      color: white;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.7s cubic-bezier(0.77, 0, 0.18, 1);
+      transform: translateY(100%);
+    }
+
+    .contact-overlay.active {
+      transform: translateY(0);
+    }
+
+    .overlay-content {
+      max-width: 1100px;
+      width: 90%;
+      display: flex;
+      gap: 3rem;
+      padding: 2.5rem;
+      position: relative;
+    }
+
+    .close-overlay {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      background: transparent;
+      color: white;
+      font-size: 1.8rem;
+      line-height: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-overlay:hover {
+      border-color: rgba(255,255,255,0.6);
+      transform: scale(1.1);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .contact-section, .credits-section {
+      flex: 1;
+    }
+
+    .contact-section h2, .credits-section h2 {
+      font-family: 'Audiowide', cursive;
+      font-size: 2.2rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.8rem;
+      color: white;
+    }
+
+    .contact-section p {
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      color: #ccc;
+      line-height: 1.7;
+    }
+
+    .contact-section .email {
+      font-size: 1.3rem;
+      color: white;
+      margin: 1.5rem 0;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+    }
+
+    .credits-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .credit-item .name {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: white;
+      margin-bottom: 0.2rem;
+    }
+
+    .credit-item .role {
+      color: #999;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+    }
+
+    .divider-vertical {
+      width: 1px;
+      height: auto;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3), transparent);
+    }
+
+    /* ----- LOADING / ERROR STATES ----- */
+    .loading-message, .error-message {
+      text-align: center;
+      padding: 2rem;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.05em;
+    }
+    .error-message {
+      color: #ff8888;
+    }
+
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 1000px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      
+      .video-slide {
+        flex: 0 0 200px;
+        height: 270px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .main {
+        padding: 6rem 1.5rem 3rem;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .gallery-card {
+        max-width: 350px;
+        margin: 0 auto;
+      }
+      
+      .video-slide {
+        flex: 0 0 170px;
+        height: 230px;
+      }
+      
+      .overlay-content {
+        flex-direction: column;
+        gap: 1.8rem;
+        padding: 2rem 1.5rem;
+      }
+      
+      .divider-vertical {
+        width: 80%;
+        height: 1px;
+        margin: 0.5rem auto;
+        background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+      }
+      
+      .home-btn {
+        top: 1rem;
+        left: 1rem;
+        width: 55px;
+        height: 55px;
+      }
+      
+      .contact-chip {
+        padding: 0.6rem 1.5rem;
+        gap: 1rem;
+      }
+      
+      .chip-text {
+        font-size: 0.8rem;
+      }
+      
+      .close-fullscreen {
+        width: 48px;
+        height: 48px;
+        bottom: 1.5rem;
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title h1 {
+        font-size: 2.5rem;
+      }
+      
+      .video-slide {
+        flex: 0 0 140px;
+        height: 190px;
+      }
+      
+      .contact-bar {
+        margin: 0.5rem 0 2rem;
+      }
+      
+      .chip-icon {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    /* Hide scrollbar for video slider */
+    .slider-container {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .slider-container::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- SNOW.MP4 BACKGROUND -->
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="snow.mp4" type="video/mp4">
+  </video>
+  <div class="bg-overlay"></div>
+
+  <!-- HOME BUTTON -->
+  <button class="home-btn" onclick="window.location.href='index.html'" aria-label="Home"></button>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- TITLE -->
+    <div class="hero-title">
+      <h1>OUR WORK</h1>
+      <p>Design in motion</p>
+    </div>
+
+    <!-- DYNAMIC GALLERY GRID (IMAGES) -->
+    <div id="imageGalleryGrid" class="gallery-grid">
+      <div class="loading-message">Loading visual stories...</div>
+    </div>
+
+    <!-- VIDEO SLIDER SECTION -->
+    <h2 class="video-row-title">MOVING IMAGES</h2>
+    <div class="slider-container" id="videoSliderContainer">
+      <div id="videoSliderTrack" class="video-slider">
+        <div class="loading-message">Loading motion works...</div>
+      </div>
+    </div>
+
+    <!-- CREATIVE CONTACT TRIGGER -->
+    <div class="contact-bar">
+      <div class="contact-chip" id="openContactBtn">
+        <span class="chip-text">GET IN TOUCH</span>
+        <div class="chip-divider"></div>
+        <span class="chip-text">hello@charrettedesign.com</span>
+        <div class="chip-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M22 2L15 9M22 2l-7 7M22 2v6M15 9l-3-3"/>
+            <path d="M4 4h16v16H4z"/>
+            <path d="M9 9h6v6H9z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FULLSCREEN IMAGE MODAL WITH CLOSE BUTTON AT BOTTOM MIDDLE -->
+  <div id="fullscreenModal" class="fullscreen-modal">
+    <img id="fullscreenImg" class="fullscreen-image" alt="Fullscreen view">
+    <button id="closeFullscreenBtn" class="close-fullscreen" aria-label="Close fullscreen view">✕</button>
+  </div>
+
+  <!-- CONTACT/CREDITS OVERLAY -->
+  <div class="contact-overlay" id="contactOverlay">
+    <button class="close-overlay" id="closeContactBtn">×</button>
+    <div class="overlay-content">
+      <div class="contact-section">
+        <h2>CONTACT</h2>
+        <p class="email">hello@charrettedesign.com</p>
+        <p>+1 (212) 555 7890</p>
+        <p>200 Hudson Street<br>New York, NY 10013</p>
+        <p style="margin-top:2rem; color:#888;">IG · IN · BE</p>
+      </div>
+      <div class="divider-vertical"></div>
+      <div class="credits-section">
+        <h2>CREDITS</h2>
+        <div class="credits-grid">
+          <div class="credit-item"><div class="name">Alexander Chen</div><div class="role">Creative Direction</div></div>
+          <div class="credit-item"><div class="name">Maya Rodriguez</div><div class="role">Lead Design</div></div>
+          <div class="credit-item"><div class="name">James Harrison</div><div class="role">Development</div></div>
+          <div class="credit-item"><div class="name">Sophia Wei</div><div class="role">Content Strategy</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ----- DYNAMIC IMAGE SCANNING FROM GALLERY FOLDER -----
+      const galleryFolderPath = 'gallery/';
+      
+      async function testImageExistence(src) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+          img.src = src;
+        });
+      }
+      
+      async function discoverImages() {
+        const foundImages = [];
+        // Numeric range 1-60
+        for (let i = 1; i <= 60; i++) {
+          for (const ext of ['png', 'jpg', 'jpeg']) {
+            const candidatePath = `${galleryFolderPath}${i}.${ext}`;
+            const exists = await testImageExistence(candidatePath);
+            if (exists) {
+              foundImages.push(candidatePath);
+              break;
+            }
+          }
+        }
+        
+        // Extra common names
+        const extraNames = ['cover', 'hero', 'design', 'project', 'main', 'showcase', 'art', 'work', 'architecture', 'interior', 'landscape'];
+        for (const name of extraNames) {
+          for (const ext of ['png', 'jpg', 'jpeg']) {
+            const candidate = `${galleryFolderPath}${name}.${ext}`;
+            const exists = await testImageExistence(candidate);
+            if (exists && !foundImages.includes(candidate)) foundImages.push(candidate);
+            const candidateUpper = `${galleryFolderPath}${name}.${ext.toUpperCase()}`;
+            const existsUpper = await testImageExistence(candidateUpper);
+            if (existsUpper && !foundImages.includes(candidateUpper)) foundImages.push(candidateUpper);
+          }
+        }
+        
+        // Pattern names img_, image_, photo_
+        for (let idx = 1; idx <= 30; idx++) {
+          const candidates = [
+            `${galleryFolderPath}img_${idx}.png`, `${galleryFolderPath}img_${idx}.jpg`,
+            `${galleryFolderPath}image_${idx}.png`, `${galleryFolderPath}image_${idx}.jpg`,
+            `${galleryFolderPath}photo_${idx}.png`, `${galleryFolderPath}photo_${idx}.jpg`
+          ];
+          for (const cand of candidates) {
+            const exists = await testImageExistence(cand);
+            if (exists && !foundImages.includes(cand)) {
+              foundImages.push(cand);
+              break;
+            }
+          }
+        }
+        
+        return [...new Map(foundImages.map(img => [img, img])).values()];
+      }
+      
+      async function discoverVideos() {
+        const foundVideos = [];
+        for (let i = 1; i <= 40; i++) {
+          const mp4Path = `${galleryFolderPath}${i}.mp4`;
+          try {
+            const res = await fetch(mp4Path, { method: 'HEAD' });
+            if (res.ok) foundVideos.push(mp4Path);
+          } catch(e) {}
+        }
+        const videoNames = ['clip', 'movie', 'vid', 'animation', 'motion'];
+        for (const vname of videoNames) {
+          for (let i=1;i<=5;i++) {
+            const cand = `${galleryFolderPath}${vname}${i}.mp4`;
+            try {
+              const res = await fetch(cand, { method: 'HEAD' });
+              if (res.ok && !foundVideos.includes(cand)) foundVideos.push(cand);
+            } catch(e) {}
+          }
+        }
+        return foundVideos;
+      }
+      
+      // Fullscreen modal logic
+      const modal = document.getElementById('fullscreenModal');
+      const fullscreenImg = document.getElementById('fullscreenImg');
+      const closeBtn = document.getElementById('closeFullscreenBtn');
+      
+      function openFullscreen(imgSrc) {
+        fullscreenImg.src = imgSrc;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+      
+      function closeFullscreen() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        fullscreenImg.src = '';
+      }
+      
+      closeBtn.addEventListener('click', closeFullscreen);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeFullscreen();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeFullscreen();
+      });
+      
+      // Render gallery with click-to-fullscreen
+      async function renderGallery() {
+        const galleryContainer = document.getElementById('imageGalleryGrid');
+        const videoTrack = document.getElementById('videoSliderTrack');
+        
+        galleryContainer.innerHTML = '<div class="loading-message">Scanning gallery for images...</div>';
+        const imagesList = await discoverImages();
+        
+        if (imagesList.length === 0) {
+          galleryContainer.innerHTML = '<div class="error-message">No images found in gallery folder. Please ensure .png/.jpg files exist in the gallery directory.</div>';
+        } else {
+          galleryContainer.innerHTML = '';
+          imagesList.forEach((imgSrc, idx) => {
+            const card = document.createElement('div');
+            card.className = 'gallery-card';
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = `Project ${idx+1}`;
+            img.loading = 'lazy';
+            const label = document.createElement('div');
+            label.className = 'card-label';
+            const fileName = imgSrc.split('/').pop().split('.')[0];
+            label.textContent = fileName.replace(/[_-]/g,' ') + ' · 2024';
+            card.appendChild(img);
+            card.appendChild(label);
+            // Click to open fullscreen image
+            card.addEventListener('click', (e) => {
+              e.stopPropagation();
+              openFullscreen(imgSrc);
+            });
+            galleryContainer.appendChild(card);
+          });
+        }
+        
+        // Videos render
+        videoTrack.innerHTML = '<div class="loading-message">Loading motion content...</div>';
+        const videoList = await discoverVideos();
+        if (videoList.length === 0) {
+          videoTrack.innerHTML = '<div class="error-message">No MP4 videos found in gallery folder.</div>';
+        } else {
+          videoTrack.innerHTML = '';
+          const allSlides = [...videoList, ...videoList];
+          allSlides.forEach(vidSrc => {
+            const slide = document.createElement('div');
+            slide.className = 'video-slide';
+            const videoEl = document.createElement('video');
+            videoEl.src = vidSrc;
+            videoEl.autoplay = true;
+            videoEl.muted = true;
+            videoEl.loop = true;
+            videoEl.playsInline = true;
+            videoEl.setAttribute('playsinline', '');
+            slide.appendChild(videoEl);
+            videoTrack.appendChild(slide);
+          });
+          const slideCount = allSlides.length;
+          videoTrack.style.setProperty('--video-count', slideCount);
+          videoTrack.classList.add('animate');
+          setTimeout(() => {
+            document.querySelectorAll('.video-slide video').forEach(v => v.play().catch(()=>{}));
+          }, 100);
+        }
+        
+        document.querySelectorAll('video').forEach(v => v.play().catch(()=>{}));
+      }
+      
+      renderGallery().catch(err => {
+        console.warn(err);
+        document.getElementById('imageGalleryGrid').innerHTML = '<div class="error-message">Unable to scan gallery. Ensure files are accessible.</div>';
+      });
+      
+      // Contact overlay toggle
+      const openBtn = document.getElementById('openContactBtn');
+      const closeContactBtn = document.getElementById('closeContactBtn');
+      const contactOverlay = document.getElementById('contactOverlay');
+      const homeBtn = document.querySelector('.home-btn');
+      
+      if (openBtn) {
+        openBtn.addEventListener('click', () => contactOverlay.classList.add('active'));
+      }
+      if (closeContactBtn) {
+        closeContactBtn.addEventListener('click', () => contactOverlay.classList.remove('active'));
+      }
+      if (contactOverlay) {
+        contactOverlay.addEventListener('click', (e) => { if (e.target === contactOverlay) contactOverlay.classList.remove('active'); });
+      }
+      
+      // Hide home button on scroll
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > lastScroll && currentScroll > 100) {
+          if (homeBtn) { homeBtn.style.opacity = '0'; homeBtn.style.pointerEvents = 'none'; }
+        } else {
+          if (homeBtn) { homeBtn.style.opacity = '1'; homeBtn.style.pointerEvents = 'auto'; }
+        }
+        lastScroll = currentScroll;
+      });
+      
+      // Intersection observer for video slider performance
+      const sliderTrack = document.getElementById('videoSliderTrack');
+      if (sliderTrack) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) sliderTrack.style.animationPlayState = 'running';
+            else sliderTrack.style.animationPlayState = 'paused';
+          });
+        }, { threshold: 0.1 });
+        observer.observe(sliderTrack);
+      }
+    })();
+  </script>
+</body>
+</html>

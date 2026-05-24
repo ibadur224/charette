@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>modern · architecture firm</title>
+  <!-- Google Font: Audiowide (regular 400) -->
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+  <style>
+    /* ----- RESET / MINIMAL BASE ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0b0b0b;
+      -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    /* ----- MAIN CONTAINER WITH SMOOTH SCROLL ----- */
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      transition: background-color 0.5s ease;
+    }
+
+    /* ----- HERO SECTION: FULL SCREEN ----- */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      height: auto;
+      overflow: hidden;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Fade out animation when navigating */
+    .hero.fade-out {
+      opacity: 0;
+      transform: translateY(-30px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* When page two is in view, hero fades slightly */
+    .container.has-scrolled .hero {
+      opacity: 0.9;
+      transform: scale(0.98);
+    }
+
+    /* ----- BACKGROUND VIDEO ----- */
+    .hero__video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: #1a1a1a;
+      z-index: 1;
+      transition: filter 0.8s ease;
+    }
+
+    .container.has-scrolled .hero__video {
+      filter: brightness(0.8) blur(2px);
+    }
+
+    /* semi‑transparent dark overlay */
+    .hero__overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.45);
+      z-index: 2;
+      pointer-events: none;
+      transition: background-color 0.8s ease;
+    }
+
+    .container.has-scrolled .hero__overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    /* ----- TEXT CONTAINER: MIDDLE CENTER ----- */
+    .hero__content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      width: 100%;
+      text-align: center;
+      padding: 0 1.5rem;
+      pointer-events: none;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+    }
+
+    .container.has-scrolled .hero__content {
+      opacity: 0.7;
+      transform: translate(-50%, -48%);
+    }
+
+    .company-name {
+      font-family: 'Audiowide', cursive, sans-serif;
+      font-size: clamp(2.8rem, 10vw, 6rem);
+      font-weight: 400;
+      line-height: 1.1;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      text-rendering: optimizeLegibility;
+      transition: text-shadow 0.8s ease;
+    }
+
+    .container.has-scrolled .company-name {
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .quote-line {
+      font-family: 'Century Gothic', 'Apple Gothic', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-weight: 400;
+      line-height: 1.3;
+      color: #f0f0f0;
+      letter-spacing: 0.03em;
+      margin-top: 0.2rem;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .container.has-scrolled .quote-line {
+      opacity: 0.8;
+      transform: translateY(5px);
+    }
+
+    @media (max-width: 600px) {
+      .hero__content {
+        padding: 0 1.5rem;
+      }
+      .company-name {
+        font-size: clamp(2.4rem, 8vw, 3.5rem);
+        margin-bottom: 0.4rem;
+      }
+      .quote-line {
+        font-size: clamp(1.2rem, 5vw, 1.8rem);
+      }
+    }
+
+    /* video fallback message */
+    .video-fallback {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ccc;
+      background: #0a0a0a;
+      font-family: 'Century Gothic', sans-serif;
+      z-index: 1;
+      pointer-events: none;
+      font-size: 1rem;
+      opacity: 0.8;
+      transition: opacity 0.8s ease;
+    }
+
+    .container.has-scrolled .video-fallback {
+      opacity: 0.4;
+    }
+
+    .hero__video {
+      z-index: 2;
+    }
+
+    /* ----- BOTTOM CENTER BUTTON (PNG AS IS, NO RECTANGLE) ----- */
+    .hero__button {
+      position: absolute;
+      bottom: clamp(1.5rem, 4vh, 3rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      pointer-events: auto;
+      
+      /* CSS variable to control size - change this value to scale button */
+      --button-scale: 1;
+      transition: opacity 0.6s ease, transform 0.6s ease, bottom 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .container.has-scrolled .hero__button {
+      opacity: 0.7;
+      bottom: clamp(2rem, 5vh, 3.5rem);
+    }
+
+    .btn-arrow-pure {
+      display: block;
+      width: calc(180px * var(--button-scale));
+      height: calc(180px * var(--button-scale));
+      background-image: url('arrow.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .btn-arrow-pure:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    .btn-arrow-pure:active {
+      transform: scale(0.95);
+    }
+
+    .btn-arrow-pure:focus {
+      outline: none;
+    }
+
+    .btn-arrow-pure:focus-visible {
+      outline: 2px solid white;
+      outline-offset: 4px;
+      border-radius: 0;
+    }
+
+    /* Arrow button for team page (same as hero) */
+    .team-page__button {
+      position: absolute;
+      bottom: 2.5rem; /* Shifted upward from 2rem */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      pointer-events: auto;
+      --button-scale: 1;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .btn-arrow-team {
+      display: block;
+      width: calc(180px * var(--button-scale));
+      height: calc(180px * var(--button-scale));
+      background-image: url('arrow.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .btn-arrow-team:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    .btn-arrow-team:active {
+      transform: scale(0.95);
+    }
+
+    .btn-arrow-team:focus {
+      outline: none;
+    }
+
+    .btn-arrow-team:focus-visible {
+      outline: 2px solid white;
+      outline-offset: 4px;
+      border-radius: 0;
+    }
+
+    @media (max-width: 768px) {
+      .hero__button,
+      .team-page__button {
+        --button-scale: 0.8;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero__button,
+      .team-page__button {
+        --button-scale: 0.7;
+        bottom: 2rem; /* Adjusted for mobile */
+      }
+    }
+
+    /* ----- SECOND PAGE WITH VIDEO BACKGROUND ----- */
+    .page-two {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      font-family: 'Century Gothic', 'Apple Gothic', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+      color: #000000;
+      text-align: center;
+      opacity: 1;
+      transition: opacity 0.8s ease;
+    }
+
+    /* Video background for second page */
+    .page-two__video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: #1a1a1a;
+      z-index: 1;
+    }
+
+    /* Content container for second page */
+    .page-two__content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      width: 100%;
+      padding: 2rem;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    /* Sliding animations for text elements */
+    .page-two__content.slide-out {
+      opacity: 0;
+    }
+    
+    .page-two__content.slide-out h2 {
+      animation: slideLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    .page-two__content.slide-out p:nth-of-type(1) {
+      animation: slideRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.1s;
+    }
+    
+    .page-two__content.slide-out p:nth-of-type(2) {
+      animation: slideRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
+    }
+
+    @keyframes slideLeft {
+      0% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-200px);
+      }
+    }
+
+    @keyframes slideRight {
+      0% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(200px);
+      }
+    }
+
+    /* Fade in animation for page two */
+    .page-two.fade-in {
+      animation: pageTwoFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes pageTwoFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Continue to team button - WHITE, shifted upward */
+    .continue-button {
+      position: absolute;
+      bottom: 3rem; /* Shifted upward from 2rem */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+    }
+
+    .continue-link {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background-color: #ffffff; /* Changed to white */
+      color: #000000; /* Changed to black text */
+      text-decoration: none;
+      font-family: 'Century Gothic', sans-serif;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeInButton 1s ease forwards 1s;
+      white-space: nowrap;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .continue-link:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+      border-color: rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes fadeInButton {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ----- TEAM SECTION (THIRD PAGE) WITH VIDEO BACKGROUND - NO OVERLAY ----- */
+    .team-page {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      font-family: 'Century Gothic', 'Apple Gothic', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+      color: #ffffff;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Video background for team page */
+    .team-page__video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: #1a1a1a;
+      z-index: 1;
+    }
+
+    /* Content container for team page */
+    .team-page__content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      width: 100%;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .team-page.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .team-page h2 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .team-page .team-description {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      line-height: 1.6;
+      max-width: 900px;
+      color: #ffffff;
+      margin-bottom: 3rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: clamp(1rem, 3vw, 2rem);
+      max-width: 1200px;
+      width: 100%;
+      margin-top: 2rem;
+    }
+
+    .team-member {
+      padding: clamp(1.5rem, 3vw, 2rem);
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .team-member:hover {
+      transform: translateY(-10px);
+      border-color: rgba(255, 255, 255, 0.5);
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .team-member h3 {
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .team-member .role {
+      font-size: clamp(0.8rem, 1.5vw, 1rem);
+      color: #cccccc;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Continue to projects button - only on team page */
+    .continue-to-projects {
+      position: absolute;
+      bottom: 2.5rem; /* Shifted upward from 2rem */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+    }
+
+    .projects-link {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background-color: #ffffff; /* Changed to white */
+      color: #000000; /* Changed to black text */
+      text-decoration: none;
+      font-family: 'Century Gothic', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeInButton 1s ease forwards 1s;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .projects-link:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+      border-color: rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ----- PROJECTS PAGE (FOURTH PAGE) WITH WORK.MP4 BACKGROUND - NO OVERLAY ----- */
+    .projects-page {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      font-family: 'Century Gothic', 'Apple Gothic', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+      color: #ffffff;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    /* Video background for projects page - work.mp4 (NO OVERLAY) */
+    .projects-page__video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: #1a1a1a;
+      z-index: 1;
+    }
+
+    .projects-page.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* BOLDER PROJECT TITLE WITH TAGLINE */
+    .projects-title-container {
+      position: relative;
+      z-index: 3;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .projects-page h2 {
+      font-family: 'Audiowide', cursive, sans-serif;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      line-height: 1.1;
+    }
+
+    .project-tagline {
+      font-family: 'Century Gothic', 'Apple Gothic', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      font-weight: 400;
+      color: #ffffff;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      opacity: 0.9;
+      margin-top: 0.5rem;
+    }
+
+    /* Horizontal scrolling container - NO SCROLLBAR */
+    .projects-scroll-container {
+      width: 100%;
+      max-width: 1400px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 2rem 0;
+      margin: 0 auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+      /* Hide scrollbar for all browsers */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      position: relative;
+      z-index: 3;
+    }
+
+    .projects-scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .projects-scroll-container:active {
+      cursor: grabbing;
+    }
+
+    /* Horizontal flex container for cards */
+    .projects-track {
+      display: flex;
+      gap: clamp(1rem, 3vw, 2rem);
+      padding: 1rem;
+      animation: slowScroll 40s linear infinite;
+      width: fit-content;
+    }
+
+    /* Pause animation on hover */
+    .projects-scroll-container:hover .projects-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes slowScroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-50% - 1rem));
+      }
+    }
+
+    /* Project card styles - enhanced for visibility on video */
+    .project-card {
+      flex: 0 0 clamp(250px, 30vw, 300px);
+      height: clamp(350px, 40vw, 400px);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: #f5f5f5;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .project-card:hover img {
+      transform: scale(1.05);
+    }
+
+    /* View Projects Button on 4th page - WHITE, shifted upward */
+    .view-projects-button {
+      position: absolute;
+      bottom: 3rem; /* Shifted upward from 1.5rem */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+    }
+
+    .view-projects-link {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background-color: #ffffff; /* Changed to white */
+      color: #000000; /* Changed to black text */
+      text-decoration: none;
+      font-family: 'Century Gothic', sans-serif;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .view-projects-link:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+      border-color: rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .view-projects-link:active {
+      transform: scale(0.95);
+    }
+
+    /* ----- FADE ANIMATION STYLES - BLACK BOLD TEXT ----- */
+    .fade-text {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #000000;
+      font-weight: 700;
+      text-shadow: none;
+    }
+
+    .fade-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .page-two h2,
+    .page-two p {
+      max-width: 800px;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .page-two h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #000000;
+      text-shadow: none;
+    }
+
+    .page-two p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.8;
+      color: #000000;
+      font-weight: 600;
+      text-shadow: none;
+    }
+
+    #page-two, #team-page, #projects-page {
+      scroll-margin-top: 0;
+    }
+
+    /* Smooth scroll indicator */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, #ffffff, #cccccc);
+      z-index: 100;
+      transition: width 0.1s ease;
+      opacity: 0.7;
+    }
+
+    /* Loading state for transition */
+    body.is-navigating {
+      overflow: hidden;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .projects-track {
+        animation-duration: 30s;
+      }
+      
+      .project-tagline {
+        font-size: 1rem;
+        letter-spacing: 0.1em;
+      }
+      
+      .continue-button {
+        bottom: 2.5rem;
+      }
+      
+      .view-projects-button {
+        bottom: 2.5rem;
+      }
+      
+      .team-page__button {
+        bottom: 2rem;
+      }
+      
+      .continue-to-projects {
+        bottom: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .projects-track {
+        animation-duration: 25s;
+      }
+      
+      .project-card {
+        flex: 0 0 200px;
+        height: 280px;
+      }
+      
+      .view-projects-link {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.8rem;
+      }
+      
+      .continue-link {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.8rem;
+      }
+      
+      .projects-link {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.8rem;
+      }
+      
+      .projects-page h2 {
+        font-size: 2.5rem;
+      }
+      
+      .project-tagline {
+        font-size: 0.9rem;
+      }
+      
+      .continue-button {
+        bottom: 2rem;
+      }
+      
+      .view-projects-button {
+        bottom: 2rem;
+      }
+    }
+
+    /* Touch device optimizations */
+    @media (hover: none) and (pointer: coarse) {
+      .project-card:hover {
+        transform: none;
+      }
+      
+      .project-card:hover img {
+        transform: none;
+      }
+      
+      .team-member:hover {
+        transform: none;
+      }
+      
+      .btn-arrow-pure:hover,
+      .btn-arrow-team:hover {
+        transform: none;
+      }
+      
+      .continue-link:hover,
+      .projects-link:hover,
+      .view-projects-link:hover {
+        transform: none;
+      }
+    }
+
+    /* Fix for any potential rendering issues */
+    .projects-page,
+    .projects-scroll-container,
+    .projects-track,
+    .project-card,
+    .project-card img {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll progress indicator -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <div class="container" id="top">
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <video class="hero__video" autoplay muted loop playsinline disablePictureInPicture>
+        <source src="walkthrough.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+
+      <div class="hero__overlay" aria-hidden="true"></div>
+
+      <div class="hero__content">
+        <div class="company-name">CHARRETTE DESIGN</div>
+        <div class="quote-line">Where Design Becomes Landmark</div>
+      </div>
+
+      <div class="hero__button">
+        <a href="#page-two" class="btn-arrow-pure" aria-label="explore" id="exploreButton"></a>
+      </div>
+
+      <div class="video-fallback" aria-hidden="true">
+        <span>walkthrough.mp4 · experience the space</span>
+      </div>
+    </section>
+
+    <!-- Second Page with Video Background -->
+    <section class="page-two" id="page-two">
+      <!-- Background video -->
+      <video class="page-two__video" autoplay muted loop playsinline disablePictureInPicture>
+        <source src="2nd.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      
+      <!-- Content container with sliding text -->
+      <div class="page-two__content" id="pageTwoContent">
+        <h2 class="fade-text">Our Vision</h2>
+        <p class="fade-text">At CHARRETTE DESIGN, we believe architecture is more than building—it's about creating spaces that inspire, endure, and transform the way people experience the world. Every project begins with a conversation, a sketch, and a commitment to excellence.</p>
+        <p class="fade-text">From concept to completion, we blend innovative design with timeless craftsmanship, ensuring each landmark tells its own unique story.</p>
+      </div>
+      
+      <!-- Continue to team button - WHITE, shifted upward -->
+      <div class="continue-button">
+        <a href="#team-page" class="continue-link" id="continueButton">DISCOVER OUR TEAM →</a>
+      </div>
+    </section>
+
+    <!-- Team Page (Third Page) with Video Background - No Overlay -->
+    <section class="team-page" id="team-page">
+      <!-- Background video -->
+      <video class="team-page__video" autoplay muted loop playsinline disablePictureInPicture>
+        <source src="3rd.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      
+      <!-- Content container -->
+      <div class="team-page__content">
+        <h2>THE TEAM</h2>
+        <div class="team-description">Visionary architects and designers shaping the future of space</div>
+        
+        <div class="team-grid">
+          <div class="team-member">
+            <h3>ALEXANDER CHEN</h3>
+            <div class="role">FOUNDING PARTNER</div>
+          </div>
+          <div class="team-member">
+            <h3>MAYA RODRIGUEZ</h3>
+            <div class="role">CREATIVE DIRECTOR</div>
+          </div>
+          <div class="team-member">
+            <h3>JAMES HARRISON</h3>
+            <div class="role">DESIGN PRINCIPAL</div>
+          </div>
+          <div class="team-member">
+            <h3>SOPHIA WEI</h3>
+            <div class="role">PROJECT ARCHITECT</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Arrow button to projects page (same as hero) - shifted upward -->
+      <div class="team-page__button">
+        <a href="#projects-page" class="btn-arrow-team" aria-label="view projects" id="continueToProjects"></a>
+      </div>
+    </section>
+
+    <!-- Projects Page (Fourth Page) with work.mp4 Background - NO OVERLAY -->
+    <section class="projects-page" id="projects-page">
+      <!-- Background video - work.mp4 (NO OVERLAY) -->
+      <video class="projects-page__video" autoplay muted loop playsinline disablePictureInPicture>
+        <source src="work.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      
+      <!-- Title container with bolder text and tagline -->
+      <div class="projects-title-container">
+        <h2>PROJECTS</h2>
+        <div class="project-tagline">SELECTED WORKS</div>
+      </div>
+      
+      <!-- Horizontal scrolling container - NO SCROLLBAR -->
+      <div class="projects-scroll-container" id="projectsScroll">
+        <div class="projects-track" id="projectsTrack">
+          <!-- Project cards with images from assets folder -->
+          <div class="project-card"><img src="assets/card1.png" alt="Project 1" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card2.png" alt="Project 2" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card3.png" alt="Project 3" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card4.png" alt="Project 4" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card5.png" alt="Project 5" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card6.png" alt="Project 6" loading="lazy"></div>
+          <!-- Duplicate cards for seamless infinite scroll effect -->
+          <div class="project-card"><img src="assets/card1.png" alt="Project 1" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card2.png" alt="Project 2" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card3.png" alt="Project 3" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card4.png" alt="Project 4" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card5.png" alt="Project 5" loading="lazy"></div>
+          <div class="project-card"><img src="assets/card6.png" alt="Project 6" loading="lazy"></div>
+        </div>
+      </div>
+      
+      <!-- View Projects Button - WHITE, shifted upward -->
+      <div class="view-projects-button">
+        <a href="pg2.html" class="view-projects-link" id="viewProjectsBtn">VIEW ALL PROJECTS →</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- JavaScript for Fade Animation and Smooth Transitions -->
+  <script>
+    (function() {
+      // Elements
+      const hero = document.querySelector('.hero');
+      const pageTwo = document.getElementById('page-two');
+      const teamPage = document.getElementById('team-page');
+      const projectsPage = document.getElementById('projects-page');
+      const container = document.querySelector('.container');
+      const scrollProgress = document.getElementById('scrollProgress');
+      const exploreButton = document.getElementById('exploreButton');
+      const continueButton = document.getElementById('continueButton');
+      const continueToProjects = document.getElementById('continueToProjects');
+      const viewProjectsBtn = document.getElementById('viewProjectsBtn');
+      const pageTwoContent = document.getElementById('pageTwoContent');
+      const projectsTrack = document.getElementById('projectsTrack');
+      const projectsScroll = document.getElementById('projectsScroll');
+      const fadeElements = document.querySelectorAll('.fade-text');
+      
+      let isTransitioning = false;
+      
+      // Function to handle explore button click
+      function handleExploreClick(e) {
+        e.preventDefault();
+        
+        if (isTransitioning) return;
+        isTransitioning = true;
+        
+        // Add fade-out class to hero
+        hero.classList.add('fade-out');
+        
+        // Add navigating class to body
+        document.body.classList.add('is-navigating');
+        
+        // Wait for fade animation to complete, then scroll
+        setTimeout(() => {
+          // Scroll to page two
+          pageTwo.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          
+          // Remove fade-out class after scrolling starts
+          setTimeout(() => {
+            hero.classList.remove('fade-out');
+            document.body.classList.remove('is-navigating');
+            
+            // Add fade-in class to page two
+            pageTwo.classList.add('fade-in');
+            
+            // Trigger text animations
+            fadeElements.forEach((element, index) => {
+              setTimeout(() => {
+                element.classList.add('visible');
+              }, index * 200);
+            });
+            
+            isTransitioning = false;
+          }, 300);
+        }, 400);
+      }
+      
+      // Function to handle view projects button click (navigate to pg2.html)
+      function handleViewProjectsClick(e) {
+        // Let the browser handle the link normally
+      }
+      
+      // Function to handle continue button click (page two to team page)
+      function handleContinueClick(e) {
+        e.preventDefault();
+        
+        if (isTransitioning) return;
+        isTransitioning = true;
+        
+        // Add slide-out class to page two content
+        pageTwoContent.classList.add('slide-out');
+        
+        // Add navigating class
+        document.body.classList.add('is-navigating');
+        
+        // Wait for slide animation, then scroll to team page
+        setTimeout(() => {
+          teamPage.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          
+          // Show team page with fade up
+          setTimeout(() => {
+            teamPage.classList.add('visible');
+            pageTwoContent.classList.remove('slide-out');
+            document.body.classList.remove('is-navigating');
+            isTransitioning = false;
+          }, 500);
+        }, 800);
+      }
+      
+      // Function to handle continue to projects button click (team page to projects page)
+      function handleContinueToProjects(e) {
+        e.preventDefault();
+        
+        if (isTransitioning) return;
+        isTransitioning = true;
+        
+        // Add navigating class
+        document.body.classList.add('is-navigating');
+        
+        // Scroll to projects page
+        setTimeout(() => {
+          projectsPage.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          
+          // Show projects page with fade up
+          setTimeout(() => {
+            projectsPage.classList.add('visible');
+            document.body.classList.remove('is-navigating');
+            isTransitioning = false;
+            
+            // Reset scroll animation
+            if (projectsTrack) {
+              projectsTrack.style.animation = 'none';
+              setTimeout(() => {
+                projectsTrack.style.animation = 'slowScroll 40s linear infinite';
+              }, 10);
+            }
+          }, 500);
+        }, 400);
+      }
+      
+      // Add click event listeners
+      if (exploreButton) {
+        exploreButton.addEventListener('click', handleExploreClick);
+      }
+      
+      if (continueButton) {
+        continueButton.addEventListener('click', handleContinueClick);
+      }
+      
+      if (continueToProjects) {
+        continueToProjects.addEventListener('click', handleContinueToProjects);
+      }
+      
+      if (viewProjectsBtn) {
+        viewProjectsBtn.addEventListener('click', handleViewProjectsClick);
+      }
+
+      // Smooth scroll functionality for any other anchor links
+      document.querySelectorAll('a[href^="#"]:not(#exploreButton):not(#continueButton):not(#continueToProjects)').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Function to check if element is in viewport
+      function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+          rect.top <= (window.innerHeight * 0.8) &&
+          rect.bottom >= 0
+        );
+      }
+
+      // Function to handle fade animations on scroll
+      function handleFadeAnimation() {
+        fadeElements.forEach(element => {
+          if (isInViewport(element)) {
+            element.classList.add('visible');
+          }
+        });
+      }
+
+      // Function to update scroll progress and hero fade
+      function updateScrollProgress() {
+        if (!container) return;
+        
+        const scrollTop = container.scrollTop;
+        const scrollHeight = container.scrollHeight - container.clientHeight;
+        const progress = (scrollTop / scrollHeight) * 100;
+        
+        if (scrollProgress) {
+          scrollProgress.style.width = progress + '%';
+        }
+        
+        // Add class to container when scrolled past hero
+        if (scrollTop > 50) {
+          container.classList.add('has-scrolled');
+        } else {
+          container.classList.remove('has-scrolled');
+        }
+        
+        // Check if team page is in view
+        if (teamPage) {
+          const teamPageRect = teamPage.getBoundingClientRect();
+          if (teamPageRect.top < window.innerHeight && teamPageRect.bottom > 0) {
+            teamPage.classList.add('visible');
+          }
+        }
+        
+        // Check if projects page is in view
+        if (projectsPage) {
+          const projectsPageRect = projectsPage.getBoundingClientRect();
+          if (projectsPageRect.top < window.innerHeight && projectsPageRect.bottom > 0) {
+            projectsPage.classList.add('visible');
+          }
+        }
+      }
+
+      // Check if we're on page two and trigger animations
+      function checkPageTwoAndAnimate() {
+        if (pageTwo) {
+          const pageTwoRect = pageTwo.getBoundingClientRect();
+          
+          // If page two is in view (or partially in view)
+          if (pageTwoRect.top < window.innerHeight && pageTwoRect.bottom > 0) {
+            // Add fade-in class if not already there
+            if (!pageTwo.classList.contains('fade-in')) {
+              pageTwo.classList.add('fade-in');
+            }
+            
+            // Stagger the animations
+            fadeElements.forEach((element, index) => {
+              setTimeout(() => {
+                element.classList.add('visible');
+              }, index * 200);
+            });
+          }
+        }
+      }
+
+      // Run on initial load
+      setTimeout(() => {
+        checkPageTwoAndAnimate();
+        updateScrollProgress();
+        
+        // Check if URL hash points to specific pages
+        if (window.location.hash === '#page-two') {
+          setTimeout(() => {
+            pageTwo.scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        } else if (window.location.hash === '#team-page') {
+          setTimeout(() => {
+            teamPage.scrollIntoView({ behavior: 'smooth' });
+            teamPage.classList.add('visible');
+          }, 300);
+        } else if (window.location.hash === '#projects-page') {
+          setTimeout(() => {
+            projectsPage.scrollIntoView({ behavior: 'smooth' });
+            projectsPage.classList.add('visible');
+          }, 300);
+        }
+      }, 100);
+
+      // Event listeners for scroll
+      window.addEventListener('scroll', () => {
+        checkPageTwoAndAnimate();
+        updateScrollProgress();
+      }, { passive: true });
+
+      window.addEventListener('resize', () => {
+        checkPageTwoAndAnimate();
+        updateScrollProgress();
+      }, { passive: true });
+
+      if (container) {
+        container.addEventListener('scroll', () => {
+          checkPageTwoAndAnimate();
+          updateScrollProgress();
+        }, { passive: true });
+      }
+
+      // Intersection Observer for reliable animation
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (entry.target.id === 'page-two') {
+                checkPageTwoAndAnimate();
+              } else if (entry.target.id === 'team-page') {
+                entry.target.classList.add('visible');
+              } else if (entry.target.id === 'projects-page') {
+                entry.target.classList.add('visible');
+              }
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+
+        if (pageTwo) {
+          observer.observe(pageTwo);
+        }
+        
+        if (teamPage) {
+          observer.observe(teamPage);
+        }
+        
+        if (projectsPage) {
+          observer.observe(projectsPage);
+        }
+        
+        fadeElements.forEach(element => {
+          observer.observe(element);
+        });
+      }
+
+      // Ensure videos play properly on mobile and desktop
+      const videos = document.querySelectorAll('video');
+      videos.forEach(video => {
+        video.play().catch(e => {
+          console.log('Video autoplay failed:', e);
+        });
+      });
+
+      // Add drag scrolling functionality
+      if (projectsScroll) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        projectsScroll.addEventListener('mousedown', (e) => {
+          isDown = true;
+          projectsScroll.classList.add('active');
+          startX = e.pageX - projectsScroll.offsetLeft;
+          scrollLeft = projectsScroll.scrollLeft;
+          // Pause animation while dragging
+          if (projectsTrack) {
+            projectsTrack.style.animationPlayState = 'paused';
+          }
+        });
+
+        projectsScroll.addEventListener('mouseleave', () => {
+          isDown = false;
+          projectsScroll.classList.remove('active');
+          // Resume animation
+          if (projectsTrack) {
+            projectsTrack.style.animationPlayState = 'running';
+          }
+        });
+
+        projectsScroll.addEventListener('mouseup', () => {
+          isDown = false;
+          projectsScroll.classList.remove('active');
+          // Resume animation
+          if (projectsTrack) {
+            projectsTrack.style.animationPlayState = 'running';
+          }
+        });
+
+        projectsScroll.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - projectsScroll.offsetLeft;
+          const walk = (x - startX) * 2;
+          projectsScroll.scrollLeft = scrollLeft - walk;
+        });
+
+        // Touch events for mobile
+        projectsScroll.addEventListener('touchstart', (e) => {
+          isDown = true;
+          startX = e.touches[0].pageX - projectsScroll.offsetLeft;
+          scrollLeft = projectsScroll.scrollLeft;
+          // Pause animation while touching
+          if (projectsTrack) {
+            projectsTrack.style.animationPlayState = 'paused';
+          }
+        });
+
+        projectsScroll.addEventListener('touchend', () => {
+          isDown = false;
+          // Resume animation
+          if (projectsTrack) {
+            projectsTrack.style.animationPlayState = 'running';
+          }
+        });
+
+        projectsScroll.addEventListener('touchmove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.touches[0].pageX - projectsScroll.offsetLeft;
+          const walk = (x - startX) * 2;
+          projectsScroll.scrollLeft = scrollLeft - walk;
+        });
+      }
+
+      // Ensure all text remains properly sized on orientation change
+      window.addEventListener('orientationchange', function() {
+        setTimeout(() => {
+          // Force reflow to ensure proper text sizing
+          document.body.style.display = 'none';
+          document.body.offsetHeight;
+          document.body.style.display = '';
+        }, 200);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>contact · credits · CHARRETTE DESIGN</title>
+  <!-- Google Font: Audiowide (regular 400) -->
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+  <style>
+    /* ----- RESET / MINIMAL BASE ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background-color: #000000;
+      font-family: 'Century Gothic', 'Apple Gothic', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #ffffff;
+    }
+
+    /* ----- MAIN CONTAINER ----- */
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      position: relative;
+    }
+
+    /* ----- BACK TO HOME BUTTON ----- */
+    .back-home {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      z-index: 1000;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      opacity: 1;
+      visibility: visible;
+      --home-scale: 0.55;
+    }
+
+    .btn-home {
+      display: block;
+      width: calc(140px * var(--home-scale));
+      height: calc(140px * var(--home-scale));
+      background-image: url('home_b.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.25s ease, filter 0.25s ease;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+    }
+
+    .btn-home:hover {
+      transform: scale(1.15);
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+    }
+
+    .btn-home:active {
+      transform: scale(0.92);
+    }
+
+    /* ----- BACK TO GALLERY BUTTON ----- */
+    .back-gallery {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 1000;
+    }
+
+    .btn-gallery {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-decoration: none;
+      font-family: 'Century Gothic', sans-serif;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-gallery:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-gallery:active {
+      transform: scale(0.95);
+    }
+
+    /* ----- CONTENT CONTAINER WITH DIVIDING LINE ----- */
+    .contact-content {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      margin: 0 auto;
+    }
+
+    /* Vertical line in the middle */
+    .divider-line {
+      width: 2px;
+      height: 320px;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9), transparent);
+    }
+
+    /* Left side - Contact Info */
+    .contact-info {
+      flex: 1;
+      text-align: right;
+      padding: 2rem;
+    }
+
+    .contact-info h2 {
+      font-family: 'Audiowide', cursive, sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .contact-info p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      margin-bottom: 1rem;
+      color: #cccccc;
+      line-height: 1.8;
+    }
+
+    .contact-info .email {
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      color: #ffffff;
+      margin: 1.5rem 0;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+
+    .contact-info .phone {
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      color: #ffffff;
+      margin: 1.5rem 0;
+      letter-spacing: 0.05em;
+    }
+
+    .contact-info .address {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: #cccccc;
+      line-height: 1.6;
+      margin: 2rem 0;
+    }
+
+    .contact-info .social {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+
+    .contact-info .social a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      letter-spacing: 0.1em;
+      transition: opacity 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .contact-info .social a:hover {
+      opacity: 1;
+    }
+
+    /* Right side - Credits */
+    .credits-info {
+      flex: 1;
+      text-align: left;
+      padding: 2rem;
+    }
+
+    .credits-info h2 {
+      font-family: 'Audiowide', cursive, sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .credits-info .credit-item {
+      margin-bottom: 1.5rem;
+    }
+
+    .credits-info .name {
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      color: #ffffff;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+
+    .credits-info .role {
+      color: #999999;
+      font-size: clamp(0.9rem, 1.8vw, 1rem);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .credits-info .separator {
+      width: 40px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.3);
+      margin: 1.5rem 0;
+    }
+
+    /* ----- FOOTER ----- */
+    .footer {
+      margin-top: 3rem;
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #666666;
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
+      letter-spacing: 0.15em;
+      width: 100%;
+      text-transform: uppercase;
+    }
+
+    /* ----- RESPONSIVE BREAKPOINTS ----- */
+    
+    /* Tablets and mobile */
+    @media (max-width: 768px) {
+      body {
+        padding: 4rem 1rem 2rem 1rem;
+        justify-content: flex-start;
+      }
+
+      .back-home {
+        top: 1rem;
+        left: 1rem;
+        --home-scale: 0.45;
+      }
+
+      .back-gallery {
+        top: 1rem;
+        right: 1rem;
+      }
+
+      .btn-gallery {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.7rem;
+      }
+
+      .contact-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .divider-line {
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+        margin: 0.5rem 0;
+      }
+      
+      .contact-info,
+      .credits-info {
+        text-align: center;
+        padding: 1rem;
+      }
+
+      .contact-info h2,
+      .credits-info h2 {
+        margin-bottom: 1.5rem;
+      }
+
+      .contact-info .social {
+        justify-content: center;
+      }
+
+      .credits-info .separator {
+        margin: 1rem auto;
+      }
+    }
+    
+    /* Small phones */
+    @media (max-width: 480px) {
+      .contact-info .email,
+      .contact-info .phone,
+      .credits-info .name {
+        font-size: 1.1rem;
+      }
+
+      .contact-info .social {
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .contact-info .social a {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Large screens */
+    @media (min-width: 1400px) {
+      .back-home {
+        --home-scale: 0.6;
+      }
+
+      .contact-content {
+        gap: 3rem;
+      }
+
+      .divider-line {
+        height: 350px;
+      }
+    }
+
+    /* Touch devices */
+    @media (hover: none) and (pointer: coarse) {
+      .btn-home:hover,
+      .btn-gallery:hover,
+      .contact-info .social a:hover {
+        transform: none;
+        opacity: 0.7;
+      }
+    }
+
+    /* Animation for entrance */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .contact-info, .credits-info {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .contact-info {
+      animation-delay: 0.2s;
+    }
+
+    .credits-info {
+      animation-delay: 0.4s;
+    }
+
+    .divider-line {
+      animation: fadeIn 0.8s ease forwards 0.3s;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back to Home Button -->
+  <div class="back-home">
+    <a href="index.html" class="btn-home" aria-label="Back to home"></a>
+  </div>
+
+  <!-- Back to Gallery Button -->
+  <div class="back-gallery">
+    <a href="pg2.html" class="btn-gallery">← BACK TO GALLERY</a>
+  </div>
+
+  <div class="container">
+    <!-- Contact/Credits Content -->
+    <div class="contact-content">
+      <!-- Left side - Contact Info -->
+      <div class="contact-info">
+        <h2>CONTACT</h2>
+        <div class="email">hello@charrettedesign.com</div>
+        <div class="phone">+1 (212) 555 7890</div>
+        <div class="address">
+          200 Hudson Street<br>
+          New York, NY 10013
+        </div>
+        <div class="social">
+          <a href="#" target="_blank">IG</a>
+          <a href="#" target="_blank">IN</a>
+          <a href="#" target="_blank">BE</a>
+        </div>
+      </div>
+      
+      <!-- Vertical dividing line -->
+      <div class="divider-line"></div>
+      
+      <!-- Right side - Credits -->
+      <div class="credits-info">
+        <h2>CREDITS</h2>
+        
+        <div class="credit-item">
+          <div class="name">Alexander Chen</div>
+          <div class="role">Creative Direction</div>
+        </div>
+        
+        <div class="credit-item">
+          <div class="name">Maya Rodriguez</div>
+          <div class="role">Lead Design</div>
+        </div>
+        
+        <div class="separator"></div>
+        
+        <div class="credit-item">
+          <div class="name">James Harrison</div>
+          <div class="role">Development</div>
+        </div>
+        
+        <div class="credit-item">
+          <div class="name">Sophia Wei</div>
+          <div class="role">Content Strategy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>CHARRETTE DESIGN · EST. 2018</p>
+    </footer>
+  </div>
+</body>
+</html>
