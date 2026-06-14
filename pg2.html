@@ -22,6 +22,7 @@
       -moz-text-size-adjust: 100%;
       text-size-adjust: 100%;
       scroll-behavior: smooth;
+      overflow-x: hidden; /* Prevent horizontal page scroll */
     }
 
     body {
@@ -192,6 +193,7 @@
       overflow: hidden;
       position: relative;
       border-radius: 24px;
+      --slide-width: 220px; /* Default slide width variable */
     }
 
     .video-slider {
@@ -209,7 +211,7 @@
     }
 
     .video-slide {
-      flex: 0 0 220px;
+      flex: 0 0 var(--slide-width);
       height: 300px;
       border-radius: 18px;
       overflow: hidden;
@@ -235,7 +237,7 @@
 
     @keyframes scrollVideos {
       0% { transform: translateX(0); }
-      100% { transform: translateX(calc(-220px * var(--video-count, 8) - 1.2rem * var(--video-count, 8))); }
+      100% { transform: translateX(calc(-1 * var(--slide-width) * var(--video-count, 8) - 1.2rem * var(--video-count, 8))); }
     }
 
     /* ----- FULLSCREEN IMAGE MODAL ----- */
@@ -381,6 +383,8 @@
       justify-content: center;
       transition: transform 0.7s cubic-bezier(0.77, 0, 0.18, 1);
       transform: translateY(100%);
+      overflow-y: auto; /* Enable vertical scroll if content is too tall */
+      -webkit-overflow-scrolling: touch;
     }
 
     .contact-overlay.active {
@@ -397,7 +401,7 @@
     }
 
     .close-overlay {
-      position: absolute;
+      position: fixed; /* Changed to fixed so it floats at the top-right of viewport while scrolling overlay */
       top: 1.5rem;
       right: 1.5rem;
       width: 44px;
@@ -411,6 +415,7 @@
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
+      z-index: 1001; /* Keep it above overlay text */
     }
 
     .close-overlay:hover {
@@ -445,6 +450,7 @@
       margin: 1.5rem 0;
       font-weight: 300;
       letter-spacing: 0.05em;
+      word-break: break-all; /* Prevent overflow on very narrow screens */
     }
 
     .credits-grid {
@@ -492,8 +498,12 @@
         gap: 1rem;
       }
       
+      .slider-container {
+        --slide-width: 200px;
+      }
+
       .video-slide {
-        flex: 0 0 200px;
+        flex: 0 0 var(--slide-width);
         height: 270px;
       }
     }
@@ -512,8 +522,12 @@
         margin: 0 auto;
       }
       
+      .slider-container {
+        --slide-width: 170px;
+      }
+
       .video-slide {
-        flex: 0 0 170px;
+        flex: 0 0 var(--slide-width);
         height: 230px;
       }
       
@@ -546,6 +560,11 @@
         font-size: 0.8rem;
       }
       
+      .close-overlay {
+        top: 1rem;
+        right: 1rem;
+      }
+
       .close-fullscreen {
         width: 48px;
         height: 48px;
@@ -555,12 +574,12 @@
     }
 
     @media (max-width: 480px) {
-      .hero-title h1 {
-        font-size: 2.5rem;
+      .slider-container {
+        --slide-width: 140px;
       }
-      
+
       .video-slide {
-        flex: 0 0 140px;
+        flex: 0 0 var(--slide-width);
         height: 190px;
       }
       
@@ -568,6 +587,22 @@
         margin: 0.5rem 0 2rem;
       }
       
+      .contact-chip {
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 1rem 1.5rem;
+        border-radius: 24px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .chip-divider {
+        width: 50%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
       .chip-icon {
         width: 28px;
         height: 28px;
@@ -766,7 +801,14 @@
         if (e.target === modal) closeFullscreen();
       });
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) closeFullscreen();
+        if (e.key === 'Escape') {
+          if (modal.classList.contains('active')) {
+            closeFullscreen();
+          }
+          if (contactOverlay && contactOverlay.classList.contains('active')) {
+            contactOverlay.classList.remove('active');
+          }
+        }
       });
       
       // Render gallery with click-to-fullscreen
