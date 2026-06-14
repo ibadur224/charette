@@ -164,6 +164,7 @@
       margin: 1.5rem 0;
       letter-spacing: 0.05em;
       font-weight: 500;
+      word-break: break-all; /* Prevent horizontal overflow on narrow screens */
     }
 
     .contact-info .phone {
@@ -259,18 +260,18 @@
     /* Tablets and mobile */
     @media (max-width: 768px) {
       body {
-        padding: 4rem 1rem 2rem 1rem;
+        padding: 7rem 1rem 2rem 1rem; /* Increased top padding to prevent fixed button overlap */
         justify-content: flex-start;
       }
 
       .back-home {
         top: 1rem;
         left: 1rem;
-        --home-scale: 0.45;
+        --home-scale: 0.4;
       }
 
       .back-gallery {
-        top: 1rem;
+        top: 1.2rem; /* Slipped down slightly to center vertically with home button */
         right: 1rem;
       }
 
