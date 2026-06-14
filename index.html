@@ -30,6 +30,7 @@
       width: 100%;
       height: 100vh;
       overflow-y: auto;
+      overflow-x: hidden; /* Prevent horizontal scroll of the entire container */
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
       transition: background-color 0.5s ease;
@@ -286,14 +287,14 @@
     @media (max-width: 768px) {
       .hero__button,
       .team-page__button {
-        --button-scale: 0.8;
+        --button-scale: 0.65;
       }
     }
 
     @media (max-width: 480px) {
       .hero__button,
       .team-page__button {
-        --button-scale: 0.7;
+        --button-scale: 0.55;
         bottom: 2rem; /* Adjusted for mobile */
       }
     }
@@ -661,6 +662,7 @@
     /* Horizontal scrolling container - NO SCROLLBAR */
     .projects-scroll-container {
       width: 100%;
+      min-width: 0; /* Flexbox constraint to prevent stretching on mobile */
       max-width: 1400px;
       overflow-x: auto;
       overflow-y: hidden;
@@ -840,6 +842,58 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
+      .hero__button {
+        --button-scale: 0.65;
+        bottom: 2.5rem;
+      }
+
+      /* Switch to relative flow to prevent overlap on stacked mobile contents */
+      .continue-button {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .continue-link {
+        animation: none;
+        opacity: 1;
+        padding: 0.8rem 1.8rem;
+        font-size: 0.85rem;
+        letter-spacing: 0.15em;
+      }
+
+      .team-page__content {
+        min-height: auto; /* Allow natural height to prevent pushing absolute elements */
+      }
+
+      .team-page__button {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 1.5rem;
+        margin-bottom: 2.5rem;
+        --button-scale: 0.55;
+      }
+
+      .view-projects-button {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 2rem;
+        margin-bottom: 2.5rem;
+      }
+
+      .view-projects-link {
+        padding: 0.8rem 1.8rem;
+        font-size: 0.85rem;
+        letter-spacing: 0.15em;
+      }
+
       .projects-track {
         animation-duration: 30s;
       }
@@ -848,25 +902,32 @@
         font-size: 1rem;
         letter-spacing: 0.1em;
       }
-      
-      .continue-button {
-        bottom: 2.5rem;
-      }
-      
-      .view-projects-button {
-        bottom: 2.5rem;
-      }
-      
-      .team-page__button {
-        bottom: 2rem;
-      }
-      
-      .continue-to-projects {
-        bottom: 2rem;
-      }
     }
 
     @media (max-width: 480px) {
+      .hero__button {
+        --button-scale: 0.5;
+        bottom: 2rem;
+      }
+
+      .continue-link {
+        padding: 0.7rem 1.4rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+      }
+
+      .team-page__button {
+        --button-scale: 0.45;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .view-projects-link {
+        padding: 0.7rem 1.4rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+      }
+
       .projects-track {
         animation-duration: 25s;
       }
@@ -876,35 +937,12 @@
         height: 280px;
       }
       
-      .view-projects-link {
-        padding: 0.7rem 1.5rem;
-        font-size: 0.8rem;
-      }
-      
-      .continue-link {
-        padding: 0.7rem 1.5rem;
-        font-size: 0.8rem;
-      }
-      
-      .projects-link {
-        padding: 0.7rem 1.5rem;
-        font-size: 0.8rem;
-      }
-      
       .projects-page h2 {
         font-size: 2.5rem;
       }
       
       .project-tagline {
         font-size: 0.9rem;
-      }
-      
-      .continue-button {
-        bottom: 2rem;
-      }
-      
-      .view-projects-button {
-        bottom: 2rem;
       }
     }
 
